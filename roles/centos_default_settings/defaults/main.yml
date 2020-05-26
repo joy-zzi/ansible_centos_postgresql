@@ -1,0 +1,15 @@
+---
+# defaults file for centos_default_settings
+packages:
+  - mc
+  - net-tools
+  - bind-utils
+  - htop
+  - atop
+  - lsof
+  - wget
+  - bzip2
+  - traceroute
+  - libselinux-python
+  - gdisk
+

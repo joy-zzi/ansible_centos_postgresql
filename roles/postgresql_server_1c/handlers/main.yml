@@ -1,0 +1,12 @@
+---
+# handlers file for postgresql_server_1c
+- name:      Restart sshd
+  service:
+    name:    sshd
+    state:   restarted
+
+- name:      grub2-mkconfig
+  command:
+    cmd:     grub2-mkconfig -o /boot/grub2/grub.cfg
+    chdir:   /usr/sbin/
+

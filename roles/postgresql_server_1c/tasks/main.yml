@@ -1,0 +1,94 @@
+---
+# tasks file for postgresql_server_1c
+- name:      Install require packages
+  yum:
+    name:    "{{ packages }}"
+
+- name: Disable tuned
+  systemd:
+    name: tuned
+    state: stopped
+    enabled: no
+
+- name: sed UseDNS
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: 's/^#\?UseDNS yes'
+    line: 'UseDNS no'
+  notify: Restart sshd
+
+- name: Swap boost
+  lineinfile:
+    path: /etc/default/grub
+    regexp: 's/rhgb quiet'
+    line: 'zswap.enabled=1 zswap.max_pool_percent=30 elevator=noop transparent_hugepage=never'
+  notify: grub2-mkconfig
+
+- name: Unzip postgresql
+  unarchive:
+    src: postgresql_11.5_19.1C_x86_64_rpm.tar.bz2
+    dest: /home/nikitin/
+
+- name: Install postgresql
+  yum:
+    name: "{{ localpackages }}"
+
+- name: Unzip postgresql addon
+  unarchive:
+    src: postgresql_addon_11.5_19.1C.tar.bz2
+    dest: /home/nikitin/
+
+- name: Install postgresql addon
+  yum:
+    name: /home/nikitin/Patch_SUBD_PostgreSQL_11.5-19.1C/postgresql11-1c-11.5-19.el7.src.rpm
+
+- name: Setting Postgresql
+  become_user: postgres
+  command: /usr/pgsql-11/bin/initdb --locale=ru_RU.UTF-8 -D /var/lib/pgsql/11/data/
+
+- name: Create cache tmpfs
+  shell: echo "tmpfs /var/lib/pgsql/11/data/pg_stat_tmp tmpfs size=1G,uid=postgres,gid=postgres 0 0" >> /etc$
+  changed_when: True
+
+- name: Edit pg_hba.conf
+  blockinfile:
+    path: /var/lib/pgsql/11/data/pg_hba.conf
+    block: |
+       # TYPE  DATABASE        USER            ADDRESS                 METHOD
+       # "local" is for Unix domain socket connections only
+       local   all             all                                      trust
+       # IPv4 local connections:
+       #host   all             all             127.0.0.1/32             ident
+       host    all             all             0.0.0.0/0                password
+       # IPv6 local connections:
+       host    all             all             ::1/128                  password
+       # Allow replication connections from localhost, by a user with the
+       # replication privilege.
+       #local   replication     postgres                                trust
+       #host    replication     postgres        127.0.0.1/32            trust
+       #host    replication     postgres        ::1/128                 trust
+
+- name: Start postgresql
+  become: yes
+  become_method: sudo
+  become_user: postgres
+  shell:
+    cmd: /usr/pgsql-11/bin/pg_ctl -D /var/lib/pgsql/11/data/ -l /var/lib/pgsql/11/logfile start
+    chdir: /usr/pgsql-11/
+
+- name: Enable 5432
+  lineinfile:
+    path: /etc/sysconfig/iptables
+    insertafter: '--dport 443 -j ACCEPT'
+    line: '-A INPUT -i eth0 -p tcp -m tcp --dport 5432 -j ACCEPT'
+
+- name: Enable postgresql
+  service:
+    name: postgresql-11
+    state: started
+    enabled: yes
+
+- name: Restart server
+  shell: shutdown -r 5
+
+

@@ -1,0 +1,22 @@
+---
+# defaults file for postgresql_server_1c
+packages:
+        - open-vm-tools
+        - epel-release
+        - htop
+        - zip
+        - mc
+        - wget
+        - sudo
+        - bzip2
+        - net-tools
+        - bind-utils
+        - tcl
+        - libselinux-python
+
+localpackages:
+        - /home/nikitin/postgresql-11.5-19.1C_x86_64_rpm/postgresql11-1c-server-11.5-19.el7.x86_64.rpm
+        - /home/nikitin/postgresql-11.5-19.1C_x86_64_rpm/postgresql11-1c-libs-11.5-19.el7.x86_64.rpm
+        - /home/nikitin/postgresql-11.5-19.1C_x86_64_rpm/postgresql11-1c-contrib-11.5-19.el7.x86_64.rpm
+        - /home/nikitin/postgresql-11.5-19.1C_x86_64_rpm/postgresql11-1c-11.5-19.el7.x86_64.rpm
+

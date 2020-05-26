@@ -1,0 +1,12 @@
+[centos]
+host1 ansible_ssh_host=172.16.100.46
+host2 ansible_ssh_host=172.16.100.48
+[ubuntu]
+host3 ansible_ssh_host=172.16.100.50
+host4 ansible_ssh_host=172.16.100.49
+
+[postgresql_servers]
+host1
+
+
+
