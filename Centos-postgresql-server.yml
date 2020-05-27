@@ -1,9 +1,0 @@
---- 
-- name:          Centos-Postgresql-1c-server
-  hosts:         postgresql_servers:ubuntu_db_servers
-  become:        yes
-  become_user:   root
-
-  roles:
-    - { role: centos_default_settings, when: ansible_os_family == 'RedHat' }
-    - { role: postgresql_server_1c, when: ansible_os_family == 'RedHat' }
