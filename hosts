@@ -1,12 +1,29 @@
-[centos]
+[postgresql_servers]
 host1 ansible_ssh_host=172.16.100.46
+
+[centos_web_servers]
 host2 ansible_ssh_host=172.16.100.48
-[ubuntu]
+
+[ubuntu_db_servers]
 host3 ansible_ssh_host=172.16.100.50
+
+[ubuntu_web_servers]
 host4 ansible_ssh_host=172.16.100.49
 
-[postgresql_servers]
-host1
+[centos:children]
+postgresql_servers
+centos_web_servers
 
+[ubuntu:children]
+ubuntu_db_servers
+ubuntu_web_servers
+
+[web_servers:children]
+centos_web_servers
+ubuntu_web_servers
+
+[db_servers:children]
+postgresql_servers
+ubuntu_db_servers
 
 

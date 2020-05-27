@@ -1,4 +1,3 @@
 ---
 ansible_python_interpreter: /usr/bin/python3
-ansible_sudo_password: Bej123ui19922
-
+ansible_sudo_pass: Bej123ui19922

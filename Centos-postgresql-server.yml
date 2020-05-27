@@ -1,6 +1,6 @@
 --- 
-- name: Centos-Postgresql-1c-server
-  hosts:         postgresql_servers:ubuntu
+- name:          Centos-Postgresql-1c-server
+  hosts:         postgresql_servers:ubuntu_db_servers
   become:        yes
   become_user:   root
 
