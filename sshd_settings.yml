@@ -1,0 +1,16 @@
+---
+hosts: all
+become: true
+tasks:
+- name: Pub key authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '#PubkeyAuthentication yes'
+    line: PubkeyAuthentication yes
+  notify: Restart sshd
+
+handlers:
+- name: Restart sshd
+  service:
+    name: sshd
+    state: restarted

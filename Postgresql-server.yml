@@ -1,0 +1,13 @@
+--- 
+- name:          Postgresql-1c-server
+  hosts:         postgresql_servers:debian_db_servers
+  become:        yes
+  become_user:   root
+
+  tasks:
+  - name: sshd_config
+    include_tasks: sshd_settings.yml
+
+  roles:
+    - { role: centos_default_settings, when: ansible_os_family == 'RedHat' }
+    - { role: postgresql_server_1c, when: ansible_os_family == 'RedHat' }
